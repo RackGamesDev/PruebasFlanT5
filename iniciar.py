@@ -7,7 +7,7 @@
 #!pip install rouge_score
 from transformers import T5Tokenizer, T5ForConditionalGeneration, AutoTokenizer, AutoModelForSeq2SeqLM, DataCollatorForSeq2Seq, Seq2SeqTrainer, Seq2SeqTrainingArguments
 from datasets import load_dataset, concatenate_datasets
-import nltk, evaluate, numpy as np
+import torch, nltk, evaluate, numpy as np
 from nltk.tokenize import sent_tokenize
 
 
@@ -47,7 +47,7 @@ ds_tokens = ds.map(padding_tokenizer, batched=True, remove_columns=['text', 'sum
 
 
 #IMPORTAR EL MODELO BASE (flan-t5 de google)
-VERSION='large' #small, base, large
+VERSION='small' #small, base, large
 FINETUNING = True
 if FINETUNING:
     model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-" + VERSION, cache_dir="./cachemodel")
@@ -56,7 +56,9 @@ else:
     model_T5 = T5ForConditionalGeneration.from_pretrained("google/flan-t5-" + VERSION, device_map="auto", cache_dir="./cachemodel")
 
 #ENTRENAR EL MODELO
+nltk.data.path.append('./nltk_data')
 nltk.download("punkt", download_dir="./nltk_data")
+nltk.download("punkt_tab", download_dir="./nltk_data")
 metric = evaluate.load("rouge")
 
 def postprocess_text(preds, labels):
@@ -112,16 +114,23 @@ tokenizer.save_pretrained(REPOSITORY + "/tokenizer")
 trainer.train()#.input_ids.to("cuda")
 
 
-#INICIAR CONVERSACION
+#EVALUAR ENTRENAMIENTO
+metric = evaluate.load("rouge")
+
+
+
+#INICIAR CONVERSACION (IMPORTAR MODELO ENTRENADO EN CASO DE HABER USADO FINETUNING)
 print("Escribe 'SALIR' para terminar la conversacion: ")
 prompt = ''
 while prompt != 'SALIR':
     prompt = input("X: ")
 
     if FINETUNING:
-        prompt_tokens = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
-        outputs = model.generate(prompt_tokens, max_length=100)
-        print("Y: " + tokenizer.decode(outputs[0]))
+        tokenizer_FT5_FT = T5Tokenizer.from_pretrained(REPOSITORY + "/tokenizer")
+        model_FT5_FT = T5ForConditionalGeneration.from_pretrained(REPOSITORY + "/checkpoint-752", device_map="auto")
+        prompt_tokens = tokenizer_FT5_FT(prompt, return_tensors="pt").input_ids.to("cuda")
+        outputs = model_FT5_FT.generate(prompt_tokens, max_length=100)
+        print("Y: " + tokenizer_FT5_FT.decode(outputs[0]))
     else:
         prompt_tokens = tokenizer_T5(prompt, return_tensors="pt").input_ids.to("cuda")
         outputs = model_T5.generate(prompt_tokens, max_length=100)

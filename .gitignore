@@ -1,3 +1,4 @@
-cache*
-nltk_data
-#flan-t5-small-fine-tuned
+cachedataset/*
+cachemodel/*
+nltk_data/*
+flan-t5-small-fine-tuned/*
