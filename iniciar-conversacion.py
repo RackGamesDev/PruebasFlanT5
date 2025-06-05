@@ -135,7 +135,7 @@ if EVALUAR:
     with torch.no_grad():
         for i in range(0, len(test_tokens["input_ids"]), batch_size):
             input_ids_batch = torch.tensor(test_tokens["input_ids"][i:i+batch_size], device='cuda:0')
-            outputs = model_FT5_FT.generate(input_ids_batch, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, do_sample=True, repetition_penalty=1.6, no_repeat_ngram_size=3, early_stopping=True)
+            outputs = model_FT5_FT.generate(input_ids_batch, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, repetition_penalty=1.6, no_repeat_ngram_size=3, early_stopping=True)
             all_predictions.extend(outputs)
     decoded_preds = tokenizer_FT5_FT.batch_decode(all_predictions, skip_special_tokens=True)
     decoded_inputs = tokenizer_FT5_FT.batch_decode(test_tokens["input_ids"], skip_special_tokens=True)
