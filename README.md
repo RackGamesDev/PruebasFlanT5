@@ -4,6 +4,7 @@ Deben existir previamente las carpetas: cachedataset, nltk_data, cachemodel, fla
 - Flan-T5-small de Google: https://huggingface.co/google/flan-t5-small
 - Dataset mlsum de reciTAL: https://huggingface.co/datasets/reciTAL/mlsum 
 - Dataset daily_dialog de li2017dailydialog: https://huggingface.co/datasets/li2017dailydialog/daily_dialog
+iniciar-conversacion.py está preparado para una ia conversacional en inglés, y iniciar-resumen.py para otra especializada en resumir artículos en español
 
 ## License
 This project is licensed under the GNU General Public License v3.0.  

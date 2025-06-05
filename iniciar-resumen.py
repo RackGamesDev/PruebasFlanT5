@@ -11,9 +11,9 @@ import torch, nltk, evaluate, numpy as np
 from nltk.tokenize import sent_tokenize
 
 EVALUAR = True #Si se quiere evaluar el modelo una vez entrenado
-NUM_EJ_TRAIN = 1500 #Numero de ejemplos de entrenamiento, validacion y test
-NUM_EJ_VAL = 500
-NUM_EJ_TEST = 200
+NUM_EJ_TRAIN = 1800 #Numero de ejemplos de entrenamiento, validacion y test
+NUM_EJ_VAL = 600
+NUM_EJ_TEST = 300
 VERSION='small' #Version del modelo: small, base, large
 FINETUNING = True #Si se entrenara usando finetuning (o simplemente se usara el base)
 REPOSITORY="./flan-t5-" + VERSION + "-fine-tuned" #UBICACION DEL MODELO ENTRENADO
@@ -127,7 +127,7 @@ if FINETUNING and EVALUAR:
     with torch.no_grad():
         for i in range(0, len(ds_tokens["test"]["input_ids"]), batch_size):
             input_ids_batch = torch.tensor(ds_tokens["test"]["input_ids"][i:i+batch_size], device='cuda:0')
-            outputs = model_FT5_FT.generate(input_ids_batch)
+            outputs = model_FT5_FT.generate(input_ids_batch, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, repetition_penalty=1.4, no_repeat_ngram_size=3, early_stopping=True)
             all_predictions.extend(outputs)
     labels = np.array(ds_tokens['test']['labels'])
     completions = np.array([pred.cpu().numpy() for pred in all_predictions])
@@ -145,11 +145,11 @@ while prompt != 'SALIR':
     if FINETUNING:
         
         prompt_tokens = tokenizer_FT5_FT(prompt, return_tensors="pt").input_ids.to("cuda")
-        outputs = model_FT5_FT.generate(prompt_tokens, max_length=300)
+        outputs = model_FT5_FT.generate(prompt_tokens, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, repetition_penalty=1.4, no_repeat_ngram_size=3, early_stopping=True)
         print("Y: " + tokenizer_FT5_FT.decode(outputs[0]))
     else:
         prompt_tokens = tokenizer_T5(prompt, return_tensors="pt").input_ids.to("cuda")
-        outputs = model_T5.generate(prompt_tokens, max_length=100)
+        outputs = model_T5.generate(prompt_tokens, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, repetition_penalty=1.4, no_repeat_ngram_size=3, early_stopping=True)
         print("Y: " + tokenizer_T5.decode(outputs[0]))
 
 if FINETUNING:

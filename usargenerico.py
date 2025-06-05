@@ -8,5 +8,5 @@ prompt = ''
 while prompt != 'SALIR':
     prompt = input("X: ")
     prompt_tokens = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
-    outputs = model.generate(prompt_tokens, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, repetition_penalty=1.2, num_beams=2)
+    outputs = model.generate(prompt_tokens, max_length=60, do_sample=True, top_p=0.95, temperature=0.7, num_beams=2, repetition_penalty=1.6, no_repeat_ngram_size=3, early_stopping=True)
     print("Y: " + tokenizer.decode(outputs[0], skip_special_tokens=True))
