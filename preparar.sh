@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir cachedataset cachemodel flan-t5-small-fine-tuned nltk_data prod
+mkdir cachedataset cachemodel flan-t5-small-fine-tuned nltk_data prod prod-onnx
 #pip install transformers
 #pip install sentencepiece
 #pip install accelerate
@@ -10,3 +10,5 @@ mkdir cachedataset cachemodel flan-t5-small-fine-tuned nltk_data prod
 python3 iniciar-conversacion.py
 #python3 usargenerico.py
 7z a -v24m modelo/prod.7z prod/*
+7z a -v24m modelo/prod-onnx.7z prod-onnx/*
+optimum-cli export onnx --model ./prod ./prod-onnx --task text2text-generation
