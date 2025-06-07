@@ -1,7 +1,7 @@
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 from optimum.onnxruntime import ORTModelForSeq2SeqLM
 
-USAR_ONNX = True
+USAR_ONNX = False
 
 if USAR_ONNX:
     model = ORTModelForSeq2SeqLM.from_pretrained('./prod-onnx', use_cache=False)
