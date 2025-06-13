@@ -13,6 +13,7 @@ Deben existir previamente las carpetas: cachedataset, nltk_data, cachemodel, fla
 En la carpeta "imagenes" hay distintos scripts ajenos de python que generan o editan imagenes usando los modelos citados mas abajo
 -StableDiffussion-2-1-base de stabilityai: https://huggingface.co/stabilityai/stable-diffusion-2-1-base 
 -Agradecimientos a CompVis por las siguientes imágenes: (https://raw.githubusercontent.com/CompVis/latent-diffusion/main/data/inpainting_examples/overture-creations-5sI6fQgYIuo_mask.png) (https://raw.githubusercontent.com/CompVis/latent-diffusion/main/data/inpainting_examples/overture-creations-5sI6fQgYIuo.png)
+-Agradecimientos a TheLastBen por el cuaderno de Google Colab .ipnyb en la carpeta imagenes
 
 ## License
 This project is licensed under the GNU General Public License v3.0.  
